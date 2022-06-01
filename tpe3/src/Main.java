@@ -6,7 +6,7 @@ public class Main {
         PrintWriter printWriter = null;
 
         try {
-                printWriter = new PrintWriter("archivoCod.txt");
+                printWriter = new PrintWriter("archivoCodLgante.txt");
         } catch (FileNotFoundException e) {
                 System.out.println("Unable to locate the fileName: " + e.getMessage());
         }
@@ -31,8 +31,6 @@ public class Main {
 
     // main function
     public static void main(String[] args)throws FileNotFoundException {
-
-
         Fuente fuente1 = new Fuente();
         ArrayList<Node> lnodos = fuente1.generar_Lista_proba();// generamos nuestra fuente en una lista de nodos
         PriorityQueue<Node> q = new PriorityQueue<Node>(lnodos.size(), new NodeComparator());
@@ -76,14 +74,17 @@ public class Main {
         printCode(root, "",data);
         almacenarArchivo(data);
         double longM = 0.0;
+        double longTotal = 0.0;
         for(Node nodo: data){
              longM += nodo.longCodigo() * nodo.getProb();
-            System.out.println("Long media: "+ longM);
+             longTotal += nodo.longCodigo() * nodo.getProb()*1000;
         }
+        System.out.println("Long media: "+ longM);
         double entropia = fuente1.CalcularEntropia();
         System.out.println("Entropia: "+ entropia);
         double r = Main.calcularRendimiento(entropia,longM);
         System.out.println("Rendimiento: "+ r);
+        System.out.println("Longitud total archivo: "+ longTotal+" bits");
     }
 
     private static double calcularRendimiento(double h, double l) {

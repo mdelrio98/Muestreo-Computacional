@@ -11,7 +11,7 @@ public class Fuente {
     }
 
     public ArrayList<Node> generar_Lista_proba() throws FileNotFoundException{
-        Scanner s = new Scanner(new File("Beethoven.txt"));
+        Scanner s = new Scanner(new File("Lgante.txt"));
         int Simbolos_totales = 0;
         while (s.hasNext()) {
             Node nodo_Nuevo= new Node(Integer.parseInt(s.next()));
@@ -39,7 +39,7 @@ public class Fuente {
     public double CalcularEntropia (){
         double h = 0;
         for (Node n : listNode) {
-            double logpi = - (3.322 * Math.log(n.getProb()));
+            double logpi = -(Math.log(n.getProb())/ Math.log(2));
             h += logpi * n.getProb();
         }
         return h;
