@@ -1,16 +1,27 @@
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
-
 public class Main {
-    // recursive function to print the
-    // huffman-code through the tree traversal.
-    // Here s is the huffman - code generated.
-    public static void printCode(Node root, String s)
+    public static void almacenarArchivo(List<Node>data){
+        PrintWriter printWriter = null;
+
+        try {
+                printWriter = new PrintWriter("archivoCod.txt");
+        } catch (FileNotFoundException e) {
+                System.out.println("Unable to locate the fileName: " + e.getMessage());
+        }
+        for (Node nodos : data) {
+            Objects.requireNonNull(printWriter).println(nodos.getSimbolo()+"|"+nodos.getProb()+"|"+nodos.getCodigo());
+        }
+        printWriter.close();
+    }
+    public static void printCode(Node root, String s, List<Node>data)
     {
         if (root.left == null && root.right == null) {
 
-            // c is the character in the node
             System.out.println("S: "+ root.getSimbolo()+ " |C: " + s +" |P: " + root.getProb());
+            root.sumarcodigo(s);
+            data.add(root);
 
             return;
         }
@@ -24,18 +35,10 @@ public class Main {
 
         Fuente fuente1 = new Fuente();
         ArrayList<Node> lnodos = fuente1.generar_Lista_proba();// generamos nuestra fuente en una lista de nodos
-        // creating a priority queue q.
-        // makes a min-priority queue(min-heap).
-        for (int i=0; i <lnodos.size();i++){System.out.println("sim: "+ lnodos.get(i).getSimbolo() + " prob:" + lnodos.get(i).getProb()) ;}
         PriorityQueue<Node> q = new PriorityQueue<Node>(lnodos.size(), new NodeComparator());
 
         q.addAll(lnodos);
-/*
-       while(!q.isEmpty()){
-            System.out.println("Simbolo: "+ q.peek().getSimbolo()+ " proba: " +q.peek().getProb());
-            q.poll();
-        }*/
-        // create a root node
+
         Node root = null;
         while (q.size() > 1) {
 
@@ -69,8 +72,22 @@ public class Main {
         }
 
         // print the codes by traversing the tree
+        List<Node>data = new ArrayList<>();
+        printCode(root, "",data);
+        almacenarArchivo(data);
+        double longM = 0.0;
+        for(Node nodo: data){
+             longM += nodo.longCodigo() * nodo.getProb();
+            System.out.println("Long media: "+ longM);
+        }
+        double entropia = fuente1.CalcularEntropia();
+        System.out.println("Entropia: "+ entropia);
+        double r = Main.calcularRendimiento(entropia,longM);
+        System.out.println("Rendimiento: "+ r);
+    }
 
-        printCode(root, "");
+    private static double calcularRendimiento(double h, double l) {
+        return h/l;
     }
 
 }
