@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Node {
         private Integer simbolo;
         private float prob;

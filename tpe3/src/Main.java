@@ -86,10 +86,4 @@ public class Main {
         System.out.println("Rendimiento: "+ r);
         System.out.println("Longitud total archivo: "+ longTotal+" bits");
     }
-
-    private static double calcularRendimiento(double h, double l) {
-        return h/l;
-    }
-
 }
-
