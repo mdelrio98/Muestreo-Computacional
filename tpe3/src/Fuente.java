@@ -7,9 +7,8 @@ public class Fuente {
     public Fuente(){
         this.listNode = new ArrayList<>();
     }
-
-    public ArrayList<Node> generar_Lista_proba() throws FileNotFoundException{
-        Scanner s = new Scanner(new File("Lgante.txt"));
+    public ArrayList<Node> procesar_Archivo_entrada() throws FileNotFoundException{
+        Scanner lector = new Scanner(new File("Lgante.txt"));
         int Simbolos_totales = 0;
         while (lector.hasNext()) {
             Node nodo_Nuevo= new Node(Integer.parseInt(lector.next()));
@@ -32,7 +31,6 @@ public class Fuente {
         lector.close();
         return listNode;
     }
-
     public double CalcularEntropia (){
         double entropia = 0;
         for (Node n : listNode) {

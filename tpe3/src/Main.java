@@ -2,7 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
 public class Main {
-    public static void almacenarArchivo(List<Node>data){
+    public static void almacenarArchivo(List<Node>nodosCodificados){
         PrintWriter printWriter = null;
 
         try {
@@ -10,80 +10,74 @@ public class Main {
         } catch (FileNotFoundException e) {
                 System.out.println("Unable to locate the fileName: " + e.getMessage());
         }
-        for (Node nodos : data) {
+        for (Node nodos : nodosCodificados) {
             Objects.requireNonNull(printWriter).println(nodos.getSimbolo()+"|"+nodos.getProb()+"|"+nodos.getCodigo());
         }
         printWriter.close();
     }
-    public static void printCode(Node root, String s, List<Node>data)
+    public static void listarCodigo(Node raiz, String s, List<Node>nodosCodificados)
     {
-        if (root.left == null && root.right == null) {
 
-            System.out.println("S: "+ root.getSimbolo()+ " |C: " + s +" |P: " + root.getProb());
-            root.sumarcodigo(s);
-            data.add(root);
+        if (raiz.left == null && raiz.right == null) {
 
+            //System.out.println("S: "+ raiz.getSimbolo()+ " |C: " + s +" |P: " + raiz.getProb());
+            raiz.sumarcodigo(s);
+            nodosCodificados.add(raiz);
             return;
         }
-        printCode(root.left, s + "0",data);
-        printCode(root.right, s + "1",data);
+        listarCodigo(raiz.left, s + "0",nodosCodificados);
+        listarCodigo(raiz.right, s + "1",nodosCodificados);
     }
 
-    // main function
+    public static void calculosTeoricos (List<Node>nodosCodificados, Fuente fuente1) {
+        double longM = 0.0;
+        double longTotal = 0.0;
+        for (Node nodo : nodosCodificados) {
+            longM += nodo.longCodigo() * nodo.getProb();
+            longTotal += nodo.longCodigo() * nodo.getProb() * 1000;
+        }
+        System.out.println("Long media: " + longM);
+        double entropia = fuente1.CalcularEntropia();
+        System.out.println("Entropia: " + entropia);
+        double rendimiento = entropia/longM;
+        System.out.println("Rendimiento: " + rendimiento);
+        System.out.println("Longitud total archivo: " + longTotal + " bits");
+    }
     public static void main(String[] args)throws FileNotFoundException {
         Fuente fuente1 = new Fuente();
-        ArrayList<Node> lnodos = fuente1.generar_Lista_proba();// generamos nuestra fuente en una lista de nodos
-        PriorityQueue<Node> q = new PriorityQueue<Node>(lnodos.size(), new NodeComparator());
-
+        ArrayList<Node> lnodos = fuente1.procesar_Archivo_entrada();// generamos nuestra fuente en una lista de nodos
+        PriorityQueue<Node> q = new PriorityQueue<>(lnodos.size(), new NodeComparator()); //cola de prioridad para ordenar los nodos
         q.addAll(lnodos);
-
-        Node root = null;
+        Node raiz = null;
+        
         while (q.size() > 1) {
 
-            // first min extract.
+            //extraigo el primer nodo con menor probabilidad
             Node x = q.peek();
             q.poll();
-
-            // second min extract.
+            //extraigo el segundo nodo con menor probabilidad
             Node y = q.peek();
             q.poll();
-
-            //generamos el nodo intermedio con la suma de las probs de los simbolos mas pequeños
+            //generamos el nodo intermedio con la suma de las probabilidades de los simbolos mas pequeños
             // no lleva simbolo
             Node f = new Node();
-
             f.setProb(x.getProb() + y.getProb());
-            // to the sum of the frequency of the two nodes
-            // assigning values to the f node.
-
-            // first extracted node as left child.
+            // el primer nodo mas chico como hijo izquierdo
             f.left = x;
-
-            // second extracted node as the right child.
+            //  el segundo nodo mas chico como hijo derecho
             f.right = y;
-
-            // marking the f node as the root node.
-            root = f;
-
-            // add this node to the priority-queue.
+            //generamos la raiz
+            raiz = f;
+            // se agrega la raiz a la cola de prioridad.
             q.add(f);
         }
 
-        // print the codes by traversing the tree
-        List<Node>data = new ArrayList<>();
-        printCode(root, "",data);
-        almacenarArchivo(data);
-        double longM = 0.0;
-        double longTotal = 0.0;
-        for(Node nodo: data){
-             longM += nodo.longCodigo() * nodo.getProb();
-             longTotal += nodo.longCodigo() * nodo.getProb()*1000;
-        }
-        System.out.println("Long media: "+ longM);
-        double entropia = fuente1.CalcularEntropia();
-        System.out.println("Entropia: "+ entropia);
-        double r = Main.calcularRendimiento(entropia,longM);
-        System.out.println("Rendimiento: "+ r);
-        System.out.println("Longitud total archivo: "+ longTotal+" bits");
+        //Se generan los codigos para cada simbolo
+        List<Node>nodosCodificados = new ArrayList<>();
+        listarCodigo(raiz, "",nodosCodificados);
+        //Almacenamos los codigos, simbolo y probabilidad en un archivo txt
+        almacenarArchivo(nodosCodificados);
+        //Calculamos entropia,longitud media, longitud total y rendimiento
+        calculosTeoricos(nodosCodificados,fuente1);
     }
 }
