@@ -25,8 +25,8 @@ public class Main {
 
             return;
         }
-        printCode(root.left, s + "0");
-        printCode(root.right, s + "1");
+        printCode(root.left, s + "0",data);
+        printCode(root.right, s + "1",data);
     }
 
     // main function
@@ -91,3 +91,4 @@ public class Main {
     }
 
 }
+

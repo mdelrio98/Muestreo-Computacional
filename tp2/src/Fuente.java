@@ -35,4 +35,14 @@ public class Fuente {
 
         return listNode;
     }
+
+    public double CalcularEntropia (){
+        double h = 0;
+        for (Node n : listNode) {
+            double logpi = - (3.322 * Math.log(n.getProb()));
+            h += logpi * n.getProb();
+        }
+        return h;
+    }
+
 }
