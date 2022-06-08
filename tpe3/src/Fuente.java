@@ -8,7 +8,7 @@ public class Fuente {
         this.listNode = new ArrayList<>();
     }
     public ArrayList<Node> procesar_Archivo_entrada() throws FileNotFoundException{
-        Scanner lector = new Scanner(new File("Lgante.txt"));
+        Scanner lector = new Scanner(new File("Beethoven.txt"));
         int Simbolos_totales = 0;
         while (lector.hasNext()) {
             Node nodo_Nuevo= new Node(Integer.parseInt(lector.next()));

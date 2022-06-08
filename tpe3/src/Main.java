@@ -6,7 +6,7 @@ public class Main {
         PrintWriter printWriter = null;
 
         try {
-                printWriter = new PrintWriter("archivoCodLgante.txt");
+                printWriter = new PrintWriter("archivoCodBeethoven.txt");
         } catch (FileNotFoundException e) {
                 System.out.println("Unable to locate the fileName: " + e.getMessage());
         }
@@ -15,18 +15,18 @@ public class Main {
         }
         printWriter.close();
     }
-    public static void listarCodigo(Node raiz, String s, List<Node>nodosCodificados)
+    public static void Codigohuffman(Node raiz, String s, List<Node>nodosCodificados)
     {
 
         if (raiz.left == null && raiz.right == null) {
 
-            //System.out.println("S: "+ raiz.getSimbolo()+ " |C: " + s +" |P: " + raiz.getProb());
+            System.out.println("S: "+ raiz.getSimbolo()+ " |C: " + s +" |P: " + raiz.getProb());
             raiz.sumarcodigo(s);
             nodosCodificados.add(raiz);
             return;
         }
-        listarCodigo(raiz.left, s + "0",nodosCodificados);
-        listarCodigo(raiz.right, s + "1",nodosCodificados);
+        Codigohuffman(raiz.left, s + "0",nodosCodificados);
+        Codigohuffman(raiz.right, s + "1",nodosCodificados);
     }
 
     public static void calculosTeoricos (List<Node>nodosCodificados, Fuente fuente1) {
@@ -74,7 +74,7 @@ public class Main {
 
         //Se generan los codigos para cada simbolo
         List<Node>nodosCodificados = new ArrayList<>();
-        listarCodigo(raiz, "",nodosCodificados);
+        Codigohuffman(raiz, "",nodosCodificados);
         //Almacenamos los codigos, simbolo y probabilidad en un archivo txt
         almacenarArchivo(nodosCodificados);
         //Calculamos entropia,longitud media, longitud total y rendimiento
