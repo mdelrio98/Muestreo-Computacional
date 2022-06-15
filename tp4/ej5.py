@@ -1,44 +1,46 @@
-#no ejecutar por la ram
+def run_length_encoding(seq):
+    compressed = []
+    count = 1
+    c= seq[0]
+    for i in range(1,len(seq)):
+        if seq[i] == c:
+            count = count + 1
+        else :
+            compressed.append([c,count])
+            c = seq[i]
+            count = 1
+    compressed.append([c,count])
+    return compressed
+ 
+def run_length_decoding(compressed_seq):
+  seq = []
+  for i in range(0,len(compressed_seq)):
+    rep=compressed_seq[i+1]
+    for j in range(rep):
+      seq.append(compressed_seq[i])
+ 
+  return(seq)
+ 
+seq = ["5","5","4","5","5","3","3","3","5",
+"5","4","4","10","9","5","5","4",
+"5","9","10","9","10","10",
+"10","2","2","3","14","13","14","13",
+"13","2","2","5","13","14","14","4","5"]
+list1 = run_length_encoding(seq)
+ 
+compressed_seq = ''
+#parsea
+for i in range(0,len(list1)):
+  for j in list1[i]:
+    compressed_seq += str(j)
 
-n=40
-m=54
-def cant_rep(arr_caracteres,i):
-    count  = 0
-    s = arr_caracteres[i]
-    while(arr_caracteres[i]==s && i<n):
-        count=count+1
-        i=i+1
-    return count
+print("|"+compressed_seq+"|")
 
-def rlc(arr_caracteres):
-    i=0
-    j=0
-    arr_rlc = [n];
-    while(i<n):
-        arr_rlc.append(str(arr_caracteres[i]))
-        j=j+1
-        i= cant_rep(arr_caracteres,i)
-        arr_rlc.append(str(i))
-        j=j+1    
-    return arr_rlc;
+list2 = run_length_decoding(list1)
+decompressed_seq = ''
+#parsea
+for i in range(0,len(list2)):
+  for j in list2[i]:
+    decompressed_seq += str(j)
 
-def decode(arr_rlc,salida,m):
-    k=0
-    l=0
-    while(k<m and l<m):
-        for i in range(arr_rlc):
-            salida[l] = arr_rlc[k]
-            l=l+1  
-    k=k+2
-    
-def main():
-    
-    arr_caracteres = ["5","5","4","5","5","3","3","3","5","5","4","4","10","9","5","5","4","5","9","10","9",
-                "10","10","10","2","2","3","14","13","14","13","13","2","2","5","13","14","14","4","5"]
-    salida = []
-    arr_rlc = rlc(arr_caracteres)
-    decode(arr_rlc,salida)
-    for i in range(arr_rlc):
-        print("|"+arr_rlc[i])
-
-main()
+print("|"+decompressed_seq+"|")
